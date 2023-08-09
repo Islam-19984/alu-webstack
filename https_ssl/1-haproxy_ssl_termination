@@ -32,7 +32,6 @@ defaults
         errorfile 502 /etc/haproxy/errors/502.http
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
-
 frontend www-http
         bind *:80
         mode http
@@ -41,11 +40,11 @@ frontend www-http
 frontend www-https
         bind *:433 ssl crt /etc/letsencrypt/live/www.islamomar.tech/fullchain.pem
         http-request set-header X-Forwarded-Proto https
-        redirect scheme https unless { ssl_fc }
+        redirect scheme https if !{ ssl_fc }
         default_backend web-backend
 
 backend web-backend
-        redirect scheme https unless { ssl_fc }
+        redirect scheme https if !{ ssl_fc }
         balance roundrobin
         server 5670-web-01 54.89.202.145:80 check
         server 5670-web-02 34.203.245.33:80 check
